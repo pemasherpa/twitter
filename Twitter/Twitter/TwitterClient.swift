@@ -38,18 +38,66 @@ class TwitterClient: BDBOAuth1SessionManager {
         })
     }
     
-    func homeTimeLineWithParams(params: NSDictionary?, completion: (tweets: [Tweet]?, error: NSError?) -> ()) {
-        GET("1.1/statuses/home_timeline.json", parameters: params, success: { (operation: NSURLSessionDataTask, response: AnyObject?) -> Void in
-            //                print("Home timeline: \(response)")
-            let tweets = Tweet.tweetsWithArray(response as! [NSDictionary])
-            completion(tweets: tweets, error: nil)
-            }, failure: { (operation: NSURLSessionDataTask?, error: NSError) -> Void in
-                print("Error getting home timeline")
-                completion(tweets: nil, error: error)
+    func homeTimelineWithParams(params: NSDictionary?, completion: (tweets: [Tweet]?, error: NSError?) -> ()){
+        
+        GET("1.1/statuses/home_timeline.json", parameters: params,
+            
+            success: { (
+                operation: NSURLSessionDataTask,
+                response: AnyObject?) -> Void in
+                var tweets = Tweet.tweetsWithArray(response as! [NSDictionary])
+                
+                completion(tweets: tweets, error:nil)
+                
+            },
+            failure: { (
+                operation: NSURLSessionDataTask?,
+                error: NSError!) -> Void in
+                print("error getting current user1")
+                User.currentUser?.logout()
+                completion(tweets: nil , error: error)
+                
+                
+                
         })
+        
     }
     
+    func favoriteWithCompletion(params: NSDictionary?, completion: (tweet: Tweet?, error: NSError?) -> ()) {
+        
+        POST("1.1/favorites/create.json", parameters: params, success: { (operation: NSURLSessionDataTask, response: AnyObject?) -> Void in
+            
+            let tweet = Tweet.tweetAsDictionary(response as! NSDictionary)
+            
+            //print("This is the retweetCount: \(tweet.retweetCount)")
+            //print("This is the favCount: \(tweet.favCount)")
+            
+            completion(tweet: tweet, error: nil)
+            
+            }) { (operation: NSURLSessionDataTask?, error: NSError) -> Void in
+                print("ERROR: \(error)")
+                completion(tweet: nil, error: error)
+        }
+    }
     
+    func retweetWithCompletion(params: NSDictionary?, completion: (tweet: Tweet?, error: NSError?) -> ()) {
+        
+        POST("1.1/statuses/retweet/\(params!["id"] as! Int).json", parameters: params, success: { (operation: NSURLSessionDataTask, response: AnyObject?) -> Void in
+            
+            let tweet = Tweet.tweetAsDictionary(response as! NSDictionary)
+            
+            //print("This is the retweetCount: \(tweet.retweetCount)")
+            //print("This is the favCount: \(tweet.favCount)")
+            
+            print(tweet)
+            
+            completion(tweet: tweet, error: nil)
+            
+            }) { (operation: NSURLSessionDataTask?, error: NSError) -> Void in
+                print("ERROR: \(error)")
+                completion(tweet: nil, error: error)
+        }
+    }
     
     func openURL(url: NSURL) {
         fetchAccessTokenWithPath("oauth/access_token", method: "POST", requestToken: BDBOAuth1Credential(queryString: url.query), success: { (accessToken: BDBOAuth1Credential!) -> Void in
