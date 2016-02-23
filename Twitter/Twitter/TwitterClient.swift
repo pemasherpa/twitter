@@ -45,7 +45,7 @@ class TwitterClient: BDBOAuth1SessionManager {
             success: { (
                 operation: NSURLSessionDataTask,
                 response: AnyObject?) -> Void in
-                var tweets = Tweet.tweetsWithArray(response as! [NSDictionary])
+                let tweets = Tweet.tweetsWithArray(response as! [NSDictionary])
                 
                 completion(tweets: tweets, error:nil)
                 

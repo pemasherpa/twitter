@@ -51,7 +51,7 @@ class User: NSObject {
         if let dictionary = try NSJSONSerialization.JSONObjectWithData(data as! NSData, options: NSJSONReadingOptions(rawValue:0)) as? NSDictionary {
         _currentUser = User(dictionary: dictionary)
         }
-    } catch {
+    }   catch {
         print("Error parsing JSON")
         }
         }
@@ -66,7 +66,7 @@ class User: NSObject {
                         NSUserDefaults.standardUserDefaults().setObject(data, forKey: currentUserKey)
                     }
                 } catch {
-                    print("Error wirting to JSON")
+                    print("Error")
                 }
             } else {
                 NSUserDefaults.standardUserDefaults().setObject(nil, forKey: currentUserKey)

@@ -28,8 +28,6 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
             self.tweets = tweets
             self.filteredTweets = tweets
             self.tableView.reloadData()
-            
-            
         })
         
         tableView.delegate = self
@@ -38,8 +36,6 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         //tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 400
         
-        
-
         // Do any additional setup after loading the view.
     }
 
@@ -66,11 +62,6 @@ class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDa
         let cell = tableView.dequeueReusableCellWithIdentifier("TweetCell", forIndexPath: indexPath) as! TweetCell
         cell.tweet = filteredTweets?[indexPath.row]
         cell.favoriteButton.selected = favoriteStates[indexPath.row] ?? false
-        
-        let backgroundView = UIView()
-        backgroundView.backgroundColor = UIColor(red: 85.0/255.0, green: 172.0/255.0, blue: 238.0/255.0, alpha: 1.0)
-        
-        cell.selectedBackgroundView = backgroundView
         
         return cell
     }
